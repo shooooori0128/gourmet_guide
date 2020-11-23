@@ -38,11 +38,11 @@ class WebhookController < ApplicationController
           # ぐるなびAPIで位置情報にマッチするレストランの候補を出力
           gnavi_res = suggest_restaurants(latitude: lat, longitude: lng)
 
-          first_shop = gnavi_res.body['rest'].first
+          first_shop = gnavi_res.body['rest']
 
           message = {
             type: 'text',
-            text: first_shop.dig('name')
+            text: first_shop[0]['name']
           }
 
           client.reply_message(event['replyToken'], message)
