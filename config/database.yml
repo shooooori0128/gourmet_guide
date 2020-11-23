@@ -23,5 +23,6 @@ test:
 production:
   <<: *default
   adapter: postgresql
+  database: gourmet_guide
   encoding: unicode
   pool: 5
