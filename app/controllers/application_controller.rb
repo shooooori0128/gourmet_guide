@@ -1,5 +1,3 @@
-require "byebug"
-
 class ApplicationController < ActionController::API
   include HttpHandler
 
