@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   # LINE Bot
-  post '/callback' => 'webhook#callback'
+  post 'callback' => 'webhook#callback'
 
   namespace :api do
     namespace :v1 do
