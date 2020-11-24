@@ -5,19 +5,17 @@ class WebhookController < ApplicationController
   include GnaviHandler
 
   def client
-    @client ||= Line::Bot::Client.new { |config|
-      config.channel_secret = ENV["LINE_CHANNEL_SECRET"]
-      config.channel_token = ENV["LINE_CHANNEL_TOKEN"]
-    }
+    @client ||= Line::Bot::Client.new do |config|
+      config.channel_secret = ENV['LINE_CHANNEL_SECRET']
+      config.channel_token = ENV['LINE_CHANNEL_TOKEN']
+    end
   end
 
   def callback
     body = request.body.read
 
     signature = request.env['HTTP_X_LINE_SIGNATURE']
-    unless client.validate_signature(body, signature)
-      halt 400, {'Content-Type' => 'text/plain'}, 'Bad Request'
-    end
+    halt 400, { 'Content-Type' => 'text/plain' }, 'Bad Request' unless client.validate_signature(body, signature)
 
     events = client.parse_events_from(body)
 
@@ -40,9 +38,75 @@ class WebhookController < ApplicationController
 
           first_shop = gnavi_res.body['rest']
 
+          # message = {
+          #   type: 'text',
+          #   text: first_shop[0]['name']
+          # }
+
           message = {
-            type: 'text',
-            text: first_shop[0]['name']
+            type: 'template',
+            altText: 'this is a carousel template',
+            template: {
+              type: 'carousel',
+              columns: [
+                {
+                  thumbnailImageUrl: 'https://example.com/bot/images/item1.jpg',
+                  imageBackgroundColor: '#FFFFFF',
+                  title: 'this is menu',
+                  text: 'description',
+                  defaultAction: {
+                    type: 'uri',
+                    label: 'View detail',
+                    uri: 'http://example.com/page/123'
+                  },
+                  actions: [
+                    {
+                      type: 'postback',
+                      label: 'Buy',
+                      data: 'action=buy&itemid=111'
+                    },
+                    {
+                      type: 'postback',
+                      label: 'Add to cart',
+                      data: 'action=add&itemid=111'
+                    },
+                    {
+                      type: 'uri',
+                      label: 'View detail',
+                      uri: 'http://example.com/page/111'
+                    }
+                  ]
+                },
+                {
+                  thumbnailImageUrl: 'https://example.com/bot/images/item1.jpg',
+                  imageBackgroundColor: '#FFFFFF',
+                  title: 'this is menu',
+                  text: 'description',
+                  defaultAction: {
+                    type: 'uri',
+                    label: 'View detail',
+                    uri: 'http://example.com/page/123'
+                  },
+                  actions: [
+                    {
+                      type: 'postback',
+                      label: 'Buy',
+                      data: 'action=buy&itemid=111'
+                    },
+                    {
+                      type: 'postback',
+                      label: 'Add to cart',
+                      data: 'action=add&itemid=111'
+                    },
+                    {
+                      type: 'uri',
+                      label: 'View detail',
+                      uri: 'http://example.com/page/111'
+                    }
+                  ]
+                }
+              ]
+            }
           }
 
           client.reply_message(event['replyToken'], message)
@@ -50,6 +114,6 @@ class WebhookController < ApplicationController
       end
     end
 
-    "OK"
+    'OK'
   end
 end
