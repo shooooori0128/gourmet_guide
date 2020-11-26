@@ -25,7 +25,9 @@ class WebhookController < ApplicationController
 
     events = client.parse_events_from(body)
 
-    message = create_massage(line_events: events)
+    event = line_events.first
+
+    message = create_massage(line_event: event)
 
     client.reply_message(event['replyToken'], message)
 
@@ -36,23 +38,21 @@ class WebhookController < ApplicationController
 
   ### イベント種類に応じたメッセージの作成
   # [HACK]ココらへんは仕様をよく読んでいないので、不明なエラーが発生する可能性あり
-  def create_massage(line_events: events)
-    event = line_events.first
-
+  def create_massage(line_event: event)
     ### messageのevent種類の定義については下記参照
     # https://github.com/line/line-bot-sdk-ruby/blob/master/lib/line/bot/event/message.rb
-    restaurants = case event
+    restaurants = case line_event
                   when Line::Bot::Event::Message
-                    case event.type
+                    case line_event.type
                     when Line::Bot::Event::MessageType::Text
                       # GoogleMapAPIから経度・緯度を取得
-                      lat, lng = fetch_location_lat_lng(address_str: event.message['text'])
+                      lat, lng = fetch_location_lat_lng(address_str: line_event.message['text'])
 
                       # ぐるなびAPIで位置情報にマッチするレストランの候補を出力
                       fetch_restaurants(lat: lat, lng: lng)
                     when Line::Bot::Event::MessageType::Location
                       # ぐるなびAPIで位置情報にマッチするレストランの候補を出力
-                      fetch_restaurants(lat: event.message['latitude'], lng: event.message['longitude'])
+                      fetch_restaurants(lat: line_event.message['latitude'], lng: line_event.message['longitude'])
                     end
                   end
 
