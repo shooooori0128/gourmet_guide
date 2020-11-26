@@ -27,6 +27,8 @@ class WebhookController < ApplicationController
 
     message = create_massage(line_event: event)
 
+    logger.info(message)
+
     client.reply_message(event['replyToken'], message)
 
     'OK'
