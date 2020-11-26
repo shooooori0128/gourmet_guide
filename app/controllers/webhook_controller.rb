@@ -100,6 +100,6 @@ class WebhookController < ApplicationController
         type: 'carousel',
         columns: contents
       }
-    }
+    }.to_json
   end
 end
