@@ -76,8 +76,8 @@ class WebhookController < ApplicationController
       {
         thumbnailImageUrl: 'https://example.com/bot/images/item1.jpg',
         imageBackgroundColor: '#FFFFFF',
-        title: item.dig('name') || 'this is menu',
-        text: item.dig('address') || 'description',
+        title: 'this is menu',
+        text: 'description',
         defaultAction: {
           type: 'uri',
           label: 'Detail',
