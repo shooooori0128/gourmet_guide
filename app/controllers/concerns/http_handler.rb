@@ -1,9 +1,9 @@
-require 'net/http'
-
 ##################################################
 # RubyのHTTPクラスのラッパーモジュール
 ##################################################
 module HttpHandler
+  require 'net/http'
+
   def get_request(url:)
     request = Net::HTTP::Get.new(url.request_uri)
 
