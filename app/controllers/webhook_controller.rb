@@ -74,7 +74,7 @@ class WebhookController < ApplicationController
   def carousel_format(items: [])
     contents = items.map do |item|
       {
-        thumbnailImageUrl: item.dig('image_url', 'shop_image1') || 'https://example.com/bot/images/item1.jpg',
+        thumbnailImageUrl: 'https://example.com/bot/images/item1.jpg',
         imageBackgroundColor: '#FFFFFF',
         title: item.dig('name') || 'this is menu',
         text: item.dig('address') || 'description',
