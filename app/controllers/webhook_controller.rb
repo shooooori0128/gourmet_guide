@@ -74,20 +74,20 @@ class WebhookController < ApplicationController
   def carousel_format(items: [])
     columns = items.map do |item|
       {
-        thumbnailImageUrl: item.dig('image_url', 'shop_image1'),
+        thumbnailImageUrl: item.dig('image_url', 'shop_image1') || '',
         imageBackgroundColor: '#FFFFFF',
-        title: item.dig('name'),
-        text: item.dig('address'),
+        title: item.dig('name') || '',
+        text: item.dig('address') || '',
         defaultAction: {
           type: 'uri',
           label: '店舗詳細',
-          uri: item.dig('url_modile')
+          uri: item.dig('url_modile') || ''
         },
         actions: [
           {
             type: 'postback',
             label: '電話する',
-            data: item.dig('tel')
+            data: item.dig('tel') || ''
           }
         ]
       }
