@@ -85,9 +85,9 @@ class WebhookController < ApplicationController
         },
         actions: [
           {
-            type: 'postback',
-            label: 'Call',
-            data: item.dig('tel') || ''
+            type: "postback",
+            label: "Buy",
+            data: "action=buy&itemid=111"
           }
         ]
       }
