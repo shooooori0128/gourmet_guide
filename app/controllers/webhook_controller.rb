@@ -25,7 +25,7 @@ class WebhookController < ApplicationController
 
     events = client.parse_events_from(body)
 
-    message = create_massage(line_event: events)
+    message = create_massage(line_events: events)
 
     client.reply_message(event['replyToken'], message)
 
@@ -36,8 +36,8 @@ class WebhookController < ApplicationController
 
   ### イベント種類に応じたメッセージの作成
   # [HACK]ココらへんは仕様をよく読んでいないので、不明なエラーが発生する可能性あり
-  def create_massage(line_event: events)
-    event = events.first
+  def create_massage(line_events: events)
+    event = line_events.first
 
     ### messageのevent種類の定義については下記参照
     # https://github.com/line/line-bot-sdk-ruby/blob/master/lib/line/bot/event/message.rb
