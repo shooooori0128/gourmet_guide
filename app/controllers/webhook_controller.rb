@@ -74,20 +74,20 @@ class WebhookController < ApplicationController
   def carousel_format(items: [])
     contents = items.map do |item|
       {
-        thumbnailImageUrl: item.dig('image_url', 'shop_image1') || 'http://example.co.jp',
+        thumbnailImageUrl: item.dig('image_url', 'shop_image1') || 'https://example.com/bot/images/item1.jpg',
         imageBackgroundColor: '#FFFFFF',
-        title: item.dig('name') || '',
-        text: item.dig('address') || '',
+        title: item.dig('name') || 'this is menu',
+        text: item.dig('address') || 'description',
         defaultAction: {
           type: 'uri',
           label: 'Detail',
-          uri: item.dig('url_mobile') || ''
+          uri: item.dig('url_mobile') || 'http://example.com/page/123'
         },
         actions: [
           {
-            type: "postback",
-            label: "Buy",
-            data: "action=buy&itemid=111"
+            type: 'postback',
+            label: 'Buy',
+            data: 'action=buy&itemid=111'
           }
         ]
       }
