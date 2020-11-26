@@ -64,10 +64,7 @@ class WebhookController < ApplicationController
 
     # カルーセルフォーマットで検索結果を返す
     # https://developers.line.biz/ja/docs/messaging-api/message-types/#carousel-template
-    {
-      type: 'text',
-      text: carousel_format(items: restaurants)
-    }
+    carousel_format(items: restaurants)
   end
 
   ### カルーセルタイプのメッセージフォーマット
