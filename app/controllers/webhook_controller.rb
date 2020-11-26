@@ -72,98 +72,33 @@ class WebhookController < ApplicationController
   ### カルーセルタイプのメッセージフォーマット
   # https://developers.line.biz/ja/reference/messaging-api/#carousel
   def carousel_format(items: [])
-    # columns = items.map do |item|
-    #   {
-    #     thumbnailImageUrl: item.dig('image_url', 'shop_image1') || '',
-    #     imageBackgroundColor: '#FFFFFF',
-    #     title: item.dig('name') || '',
-    #     text: item.dig('address') || '',
-    #     defaultAction: {
-    #       type: 'uri',
-    #       label: '店舗詳細',
-    #       uri: item.dig('url_modile') || ''
-    #     },
-    #     actions: [
-    #       {
-    #         type: 'postback',
-    #         label: '電話する',
-    #         data: item.dig('tel') || ''
-    #       }
-    #     ]
-    #   }
-    # end
+    contents = items.map do |item|
+      {
+        thumbnailImageUrl: item.dig('image_url', 'shop_image1') || 'http://example.co.jp',
+        imageBackgroundColor: '#FFFFFF',
+        title: item.dig('name') || '',
+        text: item.dig('address') || '',
+        defaultAction: {
+          type: 'uri',
+          label: 'Detail',
+          uri: item.dig('url_mobile') || ''
+        },
+        actions: [
+          {
+            type: 'postback',
+            label: 'Call',
+            data: item.dig('tel') || ''
+          }
+        ]
+      }
+    end
 
-    # {
-    #   type: 'template',
-    #   altText: 'ぐるなびから検索したレストラン候補です',
-    #   template: {
-    #     type: 'carousel',
-    #     columns: columns
-    #   }
-    # }
     {
       type: 'template',
       altText: 'this is a carousel template',
       template: {
         type: 'carousel',
-        columns: [
-          {
-            thumbnailImageUrl: 'https://example.com/bot/images/item1.jpg',
-            imageBackgroundColor: '#FFFFFF',
-            title: 'this is menu',
-            text: 'description',
-            defaultAction: {
-              type: 'uri',
-              label: 'View detail',
-              uri: 'http://example.com/page/123'
-            },
-            actions: [
-              {
-                type: 'postback',
-                label: 'Buy',
-                data: 'action=buy&itemid=111'
-              },
-              {
-                type: 'postback',
-                label: 'Add to cart',
-                data: 'action=add&itemid=111'
-              },
-              {
-                type: 'uri',
-                label: 'View detail',
-                uri: 'http://example.com/page/111'
-              }
-            ]
-          },
-          {
-            thumbnailImageUrl: 'https://example.com/bot/images/item1.jpg',
-            imageBackgroundColor: '#FFFFFF',
-            title: 'this is menu',
-            text: 'description',
-            defaultAction: {
-              type: 'uri',
-              label: 'View detail',
-              uri: 'http://example.com/page/123'
-            },
-            actions: [
-              {
-                type: 'postback',
-                label: 'Buy',
-                data: 'action=buy&itemid=111'
-              },
-              {
-                type: 'postback',
-                label: 'Add to cart',
-                data: 'action=add&itemid=111'
-              },
-              {
-                type: 'uri',
-                label: 'View detail',
-                uri: 'http://example.com/page/111'
-              }
-            ]
-          }
-        ]
+        columns: contents
       }
     }
   end
