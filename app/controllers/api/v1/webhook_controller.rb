@@ -85,7 +85,7 @@ class Api::V1::WebhookController < ApplicationController
 
     {
       type: 'template',
-      altText: 'this is a carousel template',
+      altText: '付近の飲食店検索結果です',
       template: {
         type: 'carousel',
         columns: contents
