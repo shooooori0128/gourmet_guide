@@ -34,7 +34,14 @@ module GourmetGuide
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
 
+    # タイムゾーンの設定
     config.time_zone = 'Tokyo'
     config.active_record.default_timezone = :local
+
+    # ログにタイムスタンプを付加する
+    config.log_formatter = ::Logger::Formatter.new
+
+    # root/lib配下を読み込み
+    config.paths.add "lib", eager_load: true
   end
 end

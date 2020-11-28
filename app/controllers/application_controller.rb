@@ -1,12 +1,41 @@
 class ApplicationController < ActionController::API
+  # gem 'line-bot-api'
+  require 'line/bot'
+
   include HttpHandler
 
-  rescue_from StandardError, with: :render_500
+  before_action :valid_signature
 
-  def render_500(exception)
+  rescue_from StandardError, with: :reply_error_message
+
+  def valid_signature
+    body = request.body.read
+
+    signature = request.env['HTTP_X_LINE_SIGNATURE']
+
+    error 400 do 'Bad Request' end unless client.validate_signature(body, signature)
+  end
+
+  def client
+    @client ||= Line::Bot::Client.new do |config|
+      config.channel_secret = ENV['LINE_CHANNEL_SECRET']
+      config.channel_token  = ENV['LINE_CHANNEL_TOKEN']
+    end
+  end
+
+  def reply_error_message(exception)
     error_log(exception: exception) if exception
 
-    render json: { status: 500, data: '内部エラーが発生しました！パラメータを確認してください！' }
+    events = client.parse_events_from(request.body.read)
+
+    events.each do |event|
+      client.reply_message(event['replyToken'], {
+                             type: 'text',
+                             text: '内部エラーが発生しました！管理者に連絡してください！'
+                           })
+    end
+
+    'NG'
   end
 
   private

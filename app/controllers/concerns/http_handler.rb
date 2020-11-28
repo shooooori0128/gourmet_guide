@@ -1,9 +1,9 @@
-require 'net/http'
-
 ##################################################
 # RubyのHTTPクラスのラッパーモジュール
 ##################################################
 module HttpHandler
+  require 'net/http'
+
   def get_request(url:)
     request = Net::HTTP::Get.new(url.request_uri)
 
@@ -13,8 +13,8 @@ module HttpHandler
 
     if url.port == 443
       http.use_ssl = true
-      # http.verify_mode = OpenSSL::SSL::VERIFY_PEER
-      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+      # http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     end
 
     response = http.start do |connection|
