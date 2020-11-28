@@ -63,6 +63,7 @@ class Api::V1::WebhookController < ApplicationController
       # 店舗イメージ画像に空文字を渡すと、BOTが何も返さなくなるので、適当なURLを返却する
       shop_image_url = 'https://example.com/bot/images/item1.jpg' if shop_image_url.blank?
 
+      # [TODO] 本当はクラス作った方が良いが、手抜き。今後複雑度が増す場合は作成するべし。
       {
         thumbnailImageUrl: shop_image_url,
         imageBackgroundColor: '#FFFFFF',
