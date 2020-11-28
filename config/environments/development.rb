@@ -48,4 +48,10 @@ Rails.application.configure do
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+
+  # Ngrokで正常なURLに対して403(Fobbidden)が返却される問題の対処
+  # Rails6の場合は以下の対応が必要
+  # 参考URL
+  # https://stackoverflow.com/questions/59412490/why-ngrok-send-me-a-403-forbidden
+  config.hosts << '1444c2513247.ngrok.io'
 end

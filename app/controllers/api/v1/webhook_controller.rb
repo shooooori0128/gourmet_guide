@@ -1,35 +1,20 @@
 ##################################################
 # LINEBotのコールバック用コントローラー
 ##################################################
-class WebhookController < ApplicationController
-  # gem 'line-bot-api'
-  require 'line/bot'
-
+class Api::V1::WebhookController < ApplicationController
   # GoogleMapAPI
   include GoogleMapHandler
   # ぐるなびAPI
   include GnaviHandler
 
-  def client
-    @client ||= Line::Bot::Client.new do |config|
-      config.channel_secret = ENV['LINE_CHANNEL_SECRET']
-      config.channel_token  = ENV['LINE_CHANNEL_TOKEN']
-    end
-  end
-
   def callback
-    body = request.body.read
+    events = client.parse_events_from(request.body.read)
 
-    signature = request.env['HTTP_X_LINE_SIGNATURE']
-    halt 400, { 'Content-Type' => 'text/plain' }, 'Bad Request' unless client.validate_signature(body, signature)
+    events.each do |event|
+      message = create_massage(line_event: event)
 
-    event = client.parse_events_from(body).first
-
-    message = create_massage(line_event: event)
-
-    logger.info(message)
-
-    client.reply_message(event['replyToken'], message)
+      client.reply_message(event['replyToken'], message)
+    end
 
     'OK'
   end
@@ -73,21 +58,26 @@ class WebhookController < ApplicationController
   # https://developers.line.biz/ja/reference/messaging-api/#carousel
   def carousel_format(items: [])
     contents = items.map do |item|
+      shop_image_url = item.dig('image_url', 'shop_image1')
+
+      # 店舗イメージ画像に空文字を渡すと、BOTが何も返さなくなるので、適当なURLを返却する
+      shop_image_url = 'https://example.com/bot/images/item1.jpg' if shop_image_url.blank?
+
       {
-        thumbnailImageUrl: 'https://example.com/bot/images/item1.jpg',
+        thumbnailImageUrl: shop_image_url,
         imageBackgroundColor: '#FFFFFF',
-        title: 'this is menu',
-        text: 'description',
+        title: item.dig('name') || '店舗名不明',
+        text: item.dig('address') || '住所不明',
         defaultAction: {
           type: 'uri',
-          label: 'Detail',
-          uri: item.dig('url_mobile') || 'http://example.com/page/123'
+          label: '店舗詳細',
+          uri: item.dig('url_mobile') || ''
         },
         actions: [
           {
-            type: 'postback',
-            label: 'Buy',
-            data: 'action=buy&itemid=111'
+            type: 'uri',
+            label: '店舗詳細',
+            uri: item.dig('url_mobile') || ''
           }
         ]
       }
@@ -100,6 +90,6 @@ class WebhookController < ApplicationController
         type: 'carousel',
         columns: contents
       }
-    }.to_json
+    }
   end
 end
