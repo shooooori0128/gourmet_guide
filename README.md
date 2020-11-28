@@ -1,24 +1,7 @@
-# README
+# 近くの飲食店を検索するLINEBotアプリ
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+位置情報、もしくは住所テキストを入力すると、付近５００ｍ圏内の飲食店上位10件を表示してくれます。
 
-Things you may want to cover:
+LINE_ID: @249hiwhs
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+遊び用で作ったので、今後アップデートの予定はないです笑
